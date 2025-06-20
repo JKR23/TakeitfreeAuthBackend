@@ -1,7 +1,6 @@
 package com.takeitfree.auth.config;
 
 import com.takeitfree.auth.config.utils.JwtBlackListFilter;
-import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +42,7 @@ import java.util.List;
 @Configuration // Indicates that this class contains Spring beans and configuration
 @EnableWebSecurity // Enables Spring Security support
 @RequiredArgsConstructor
-@EnableMethodSecurity //protect some gateway for just admin, take a look userController
+@EnableMethodSecurity //allow us to use @PreAuthorize("hasRole('...')")
 public class SecurityConfig {
 
     // Injects a custom UserDetailsService (used for fetching user info from DB)
@@ -64,9 +63,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**"
-                        ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         //.requestMatchers("/role/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -88,7 +85,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // Allows frontend on port 3000
+        config.setAllowedOrigins(List.of("http://localhost:3001")); // Allows frontend on port 3000
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP methods
         config.setAllowedHeaders(List.of("*")); // Allows any headers
         config.setAllowCredentials(true); // Allow cookies or Authorization headers

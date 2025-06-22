@@ -6,4 +6,6 @@ public interface PasswordResetTokenService {
     public ResponseLinkForResetPassword sendLinkResetPassword(String email);
 
     public String resetPassword(String token, String newPassword);
+
+    public void checkTokenValidity(String token);
 }

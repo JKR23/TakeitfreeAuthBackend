@@ -1,6 +1,7 @@
 package com.takeitfree.auth.service.impl;
 
 import com.takeitfree.auth.dto.ResponseLinkForResetPassword;
+import com.takeitfree.auth.exceptions.TokenExpiredException;
 import com.takeitfree.auth.models.PasswordResetToken;
 import com.takeitfree.auth.models.User;
 import com.takeitfree.auth.repositories.PasswordResetTokenRepository;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,6 +37,9 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     private final ObjectValidator objectValidator;
     private final PasswordEncoder passwordEncoder;
     private final Logger logger = LoggerFactory.getLogger(PasswordResetTokenServiceImpl.class);
+
+    @Value("${frontend.url}")
+    private String frontendPath;
 
     @Override
     @Transactional
@@ -87,6 +92,11 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         }
     }
 
+    @Override
+    public void checkTokenValidity(String token) {
+        validatePasswordResetToken(token);
+    }
+
     private PasswordResetToken validatePasswordResetToken(String token) {
         this.objectValidator.validate(token);
 
@@ -97,7 +107,7 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         }
 
         if (passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("This token has expired");
+            throw new TokenExpiredException("This token has expired");
         }
 
         return passwordResetToken;
@@ -151,12 +161,11 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                 // Because it's a generation.identity so automatic.id(1L)
                 .token(token)
                 .email(email)
-                .expiryDate(LocalDate.now().atStartOfDay().plusMinutes(30))
+                .expiryDate(LocalDateTime.now().plusMinutes(30))
                 .build();
     }
 
     private String generateBodyMessageWithResetLink(String token) {
-        String frontendPath = "";//url to frontend
 
         String resetLink = frontendPath+"?token="+token;
 

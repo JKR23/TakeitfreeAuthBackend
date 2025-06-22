@@ -1,6 +1,7 @@
 package com.takeitfree.auth.globalExceptionHandler;
 
 import com.takeitfree.auth.exceptions.ObjectNotValidException;
+import com.takeitfree.auth.exceptions.TokenExpiredException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -91,6 +92,33 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MailConnectException.class)
     public ResponseEntity<RepresentationException> handleMailConnectException(MailConnectException ex) {
+        RepresentationException re = RepresentationException.builder()
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(re);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<RepresentationException> handleIllegalArgumentException(IllegalArgumentException ex) {
+        RepresentationException re = RepresentationException.builder()
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(re);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<RepresentationException> handleRuntimeException(RuntimeException ex) {
+        RepresentationException re = RepresentationException.builder()
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(re);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<RepresentationException> handleTokenExpiredException(TokenExpiredException ex) {
         RepresentationException re = RepresentationException.builder()
                 .message(ex.getMessage())
                 .build();

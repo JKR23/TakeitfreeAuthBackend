@@ -4,9 +4,9 @@ import com.takeitfree.auth.exceptions.ObjectNotValidException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import org.eclipse.angus.mail.util.MailConnectException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -82,6 +82,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<RepresentationException> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        RepresentationException re = RepresentationException.builder()
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(re);
+    }
+
+    @ExceptionHandler(MailConnectException.class)
+    public ResponseEntity<RepresentationException> handleMailConnectException(MailConnectException ex) {
         RepresentationException re = RepresentationException.builder()
                 .message(ex.getMessage())
                 .build();

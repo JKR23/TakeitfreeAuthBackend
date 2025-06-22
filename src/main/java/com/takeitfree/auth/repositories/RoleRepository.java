@@ -1,6 +1,5 @@
 package com.takeitfree.auth.repositories;
 
-import com.takeitfree.auth.dto.UserPublicDTO;
 import com.takeitfree.auth.models.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

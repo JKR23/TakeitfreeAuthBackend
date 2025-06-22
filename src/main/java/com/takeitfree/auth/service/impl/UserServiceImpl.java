@@ -91,9 +91,6 @@ public class UserServiceImpl implements UserService {
 
         this.objectValidator.validate(emailAndPasswordRequest);
 
-        Optional<User> optionalUser = Optional
-                .ofNullable(this.userRepository.findByEmail(emailAndPasswordRequest.getEmail()));
-
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         emailAndPasswordRequest.getEmail(), emailAndPasswordRequest.getPassword()
@@ -116,26 +113,6 @@ public class UserServiceImpl implements UserService {
         this.blackListedTokenService.addBlackListedToken(token);
 
         return "Logout successful";
-    }
-
-    @Override
-    public String updatePassword(String email, String newPassword) {
-
-        this.objectValidator.validate(email);
-
-        Optional<User> optionalUser = Optional.ofNullable(this.userRepository.findByEmail(email));
-
-        if (optionalUser.isEmpty()) {
-            throw new EntityNotFoundException("User doesn't exist with this email");
-        }
-
-        //Crypt password
-        optionalUser.get().setPassword(this.passwordEncoder.encode(newPassword));
-
-        this.userRepository.save(optionalUser.get());
-
-        return "Password updated successfully";
-
     }
 
     @Override
@@ -193,8 +170,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private User attributeRoleUserInSignUp(User user) {
-        Role role = new Role();
-        role = roleRepository.findByName("ROLE_USER");
+
+        Role role = roleRepository.findByName("ROLE_USER");
 
         if (user.getRoles() == null || user.getRoles().isEmpty()){
             user.setRoles(new HashSet<>());

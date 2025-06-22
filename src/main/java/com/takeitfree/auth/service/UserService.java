@@ -14,7 +14,6 @@ public interface UserService {
     public String addUser(UserRequestDTO user);
     public AuthenticationResponse loginUser(EmailAndPasswordRequest emailAndPasswordRequest);
     public String logout(String token);
-    public String updatePassword(String email, String newPassword);
     public String deleteUser(Long id);
     List<UserPublicDTO> findByUsername(String username);
     public String attributeRoleToUser(Long id, Long idRole);

@@ -19,15 +19,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PutMapping("/update-password")
-    public ResponseEntity<?> updatePassword(@Valid @RequestBody EmailAndPasswordRequest emailAndPasswordRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            return errorsValidation(bindingResult);
-        }
-
-        return ResponseEntity.status(200).body(this.userService.updatePassword(emailAndPasswordRequest.getEmail(), emailAndPasswordRequest.getPassword()));
-    }
-
     @PostMapping("logout")
     public ResponseEntity<?> logOut (@RequestHeader("Authorization") String authHeader){
         String token = SecurityUtils.extractTokenFromHeader(authHeader);

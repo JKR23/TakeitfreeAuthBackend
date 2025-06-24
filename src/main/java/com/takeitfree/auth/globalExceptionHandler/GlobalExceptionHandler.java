@@ -1,5 +1,6 @@
 package com.takeitfree.auth.globalExceptionHandler;
 
+import com.takeitfree.auth.exceptions.ImageProcessingException;
 import com.takeitfree.auth.exceptions.ObjectNotValidException;
 import com.takeitfree.auth.exceptions.TokenExpiredException;
 import jakarta.persistence.EntityExistsException;
@@ -119,6 +120,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<RepresentationException> handleTokenExpiredException(TokenExpiredException ex) {
+        RepresentationException re = RepresentationException.builder()
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(re);
+    }
+
+    @ExceptionHandler(ImageProcessingException.class)
+    public ResponseEntity<RepresentationException> handleImageProcessingException(ImageProcessingException ex) {
         RepresentationException re = RepresentationException.builder()
                 .message(ex.getMessage())
                 .build();

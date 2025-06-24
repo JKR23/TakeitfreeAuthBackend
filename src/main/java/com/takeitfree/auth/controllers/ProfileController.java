@@ -5,9 +5,12 @@ import com.takeitfree.auth.dto.ProfileDTO;
 import com.takeitfree.auth.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,6 +41,19 @@ public class ProfileController {
         Long idUser = SecurityUtils.getCurrentUserId();
 
         return ResponseEntity.status(200).body(this.profileService.deleteProfiles(idUser));
+    }
+
+    @PutMapping(value = "/update-photo-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateItem(@RequestParam("image") MultipartFile imageFile) {
+
+        try {
+            return ResponseEntity
+                    .status(200)
+                    .body(this.profileService.updateImageProfile(imageFile));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during updating photo profile: " + e.getMessage()+" "+e.getCause());
+        }
     }
 
     private ResponseEntity<?> errorsValidation(BindingResult bindingResult) {

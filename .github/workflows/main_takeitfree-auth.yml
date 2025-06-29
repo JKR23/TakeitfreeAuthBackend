@@ -58,4 +58,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'takeitfree-auth'
-          package: target/auth-0.0.1-SNAPSHOT.jar
+          package: auth-0.0.1-SNAPSHOT.jar

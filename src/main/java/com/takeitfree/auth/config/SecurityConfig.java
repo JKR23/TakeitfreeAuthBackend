@@ -89,7 +89,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
                 "http://localhost:3001",
-                "https://take-it-free-item-management-fronte.vercel.app")
+                "https://takeitfree-auth-frontend.vercel.app")
         ); // Allows frontend on port 3001 and production
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP methods
         config.setAllowedHeaders(List.of("*")); // Allows any headers

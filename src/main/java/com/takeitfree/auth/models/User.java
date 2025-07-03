@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public class User implements Serializable, UserDetails {
 
     @Id

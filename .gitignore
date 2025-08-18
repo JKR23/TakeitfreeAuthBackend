@@ -15,6 +15,7 @@ target/
 
 /secrets.txt
 
+### Resource properties ###
 /src/main/resources/application.properties
 
 ### IntelliJ IDEA ###
